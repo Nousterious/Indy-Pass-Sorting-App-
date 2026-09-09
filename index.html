@@ -7,7 +7,7 @@
 <meta name="description" content="Every Indy Pass downhill ski area in the Northeast, sortable by drive time, road miles, vertical drop and lifts.">
 <title>Indy Pass Northeast Finder</title>
 <!--
-  Indy Pass Northeast Finder
+  Indy Pass Northeast Finder — the Northeast-only edition.
   Copyright (c) 2026 Terry Nous — MIT License. See LICENSE.
 
   ZIP code coordinates derived from GeoNames (https://www.geonames.org),
@@ -19,7 +19,6 @@
   verified against each operator's own website. Unofficial — not affiliated
   with, endorsed by, or sponsored by Indy Pass or any listed resort.
 -->
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -176,6 +175,11 @@ tbody tr:hover td{background:var(--surface-2);}
 }
 .name{font-weight:600;font-size:14.5px;line-height:1.25;}
 .place{font-size:12px;color:var(--muted);letter-spacing:.01em;}
+.sitelink{color:inherit;text-decoration:none;border-bottom:1px solid var(--line-strong);}
+.sitelink:hover,.sitelink:focus-visible{color:var(--accent);border-bottom-color:var(--accent);}
+.passlink{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--line-strong);}
+.passlink:hover,.passlink:focus-visible{color:var(--signal);border-bottom-color:var(--signal);}
+.sitelink:focus-visible,.passlink:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
 .addrline{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap;}
 @media (min-width:761px){
   thead th:nth-child(2),tbody td:nth-child(2){min-width:410px;}
@@ -253,7 +257,7 @@ tbody tr:hover td{background:var(--surface-2);}
   <div class="controls">
     <div class="field">
       <label for="zip">Your ZIP code</label>
-      <input id="zip" inputmode="numeric" maxlength="5" value="11793" autocomplete="postal-code">
+      <input id="zip" inputmode="numeric" maxlength="5" value="10001" autocomplete="postal-code">
     </div>
     <p class="origin" id="origin"></p>
     <div class="field">
@@ -291,7 +295,7 @@ tbody tr:hover td{background:var(--surface-2);}
 
   <div class="foot">
     <span class="count" id="count"></span>
-    <span>Road miles and drive times are modelled, not routed &mdash; free-flowing speeds, no traffic, stops or weather, so treat them as a floor. Long Island ZIPs are routed over the Throgs Neck Bridge, since there is no road east; the Port Jefferson&ndash;Bridgeport and Orient Point&ndash;New London ferries can beat these numbers to Connecticut and points east. Times of 3 hours or more are marked in amber. Tap any address for driving directions from your ZIP, or copy it to paste into your own maps app. Base-lodge addresses were checked against each operator&rsquo;s own website; Catamount straddles the state line and its base address is on the NY side. Stats from <a href="https://www.indyskipass.com/our-resorts/east">indyskipass.com</a>; ZIP coordinates from <a href="https://www.geonames.org">GeoNames</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, rounded. Unofficial &mdash; not affiliated with Indy Pass. Check blackout dates before you go.</span>
+    <span>Road miles and drive times are modelled, not routed &mdash; free-flowing speeds, no traffic, stops or weather, so treat them as a floor. Long Island ZIPs are routed over the Throgs Neck Bridge, since there is no road east; the Port Jefferson&ndash;Bridgeport and Orient Point&ndash;New London ferries can beat these numbers to Connecticut and points east. Times of 3 hours or more are marked in amber. Tap any address for driving directions from your ZIP, or copy it to paste into your own maps app. Base-lodge addresses were checked against each operator&rsquo;s own website; Catamount straddles the state line and its base address is on the NY side. Stats from <a href="https://www.indyskipass.com/our-resorts/east">indyskipass.com</a>; ZIP coordinates from <a href="https://www.geonames.org">GeoNames</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, rounded. Unofficial &mdash; not affiliated with Indy Pass. Resort names link to the operator; <b>pass info</b> goes to that resort's Indy page, where the blackout dates live. <a href="index.html"><b>Want the whole pass? Open the Atlas &rarr;</b></a></span>
   </div>
 </div>
 
@@ -391,7 +395,105 @@ const ADDR = {
  "Saddleback Mountain":"976 Saddleback Mountain Rd, Rangeley, ME 04970",
  "Winter4Kids":"44 Breakneck Rd, Vernon, NJ 07462"
 };
-AREAS.forEach(function(a){ a.addr = ADDR[a.name] || null; });
+const IPX = "https://www.indyskipass.com/our-resorts/";
+const WEB = {
+ "Berkshire East":["https://berkshireeast.com","berkshire-east-mountain-resort"],
+ "Black Mountain":["https://www.blackmt.com","black-mountain-ski-area"],
+ "Bolton Valley":["https://www.boltonvalley.com","bolton-valley-resort"],
+ "Bousquet Mountain":["https://bousquetmountain.com","bousquet-mountain-0"],
+ "Buffalo Ski Club":["https://www.buffaloskicenter.com","buffalo-ski-club"],
+ "Burke Mountain":["https://www.skiburke.com","burke-mountain"],
+ "Cannon Mountain":["https://www.cannonmt.com","cannon-mountain"],
+ "Catamount Mountain Resort":["https://catamountski.com","catamount-mountain-resort"],
+ "Cazenovia Ski Club":["https://skicaz.com","cazenovia-ski-club"],
+ "Dartmouth Skiway":["https://sites.dartmouth.edu/skiway/","dartmouth-skiway"],
+ "Dry Hill Ski Area":["https://www.skidryhill.com","dry-hill-ski-area"],
+ "Greek Peak":["https://www.greekpeak.net","greek-peak-mountain-resort"],
+ "Hunt Hollow Ski Club":["https://www.hunthollow.com","hunt-hollow-ski-club"],
+ "Jay Peak Resort":["https://jaypeakresort.com","jay-peak-resort"],
+ "King Pine":["https://www.kingpine.com","king-pine"],
+ "Magic Mountain":["https://www.magicmtn.com","magic-mountain"],
+ "Maple Ski Ridge":["https://www.mapleskiridge.com","maple-ski-ridge"],
+ "McIntyre Ski Area":["https://www.mcintyreskiarea.com","mcintyre-ski-area"],
+ "Middlebury Snowbowl":["https://www.middleburysnowbowl.com","middlebury-snowbowl"],
+ "Mohawk Mountain":["https://www.mohawkmtn.com","mohawk-mountain"],
+ "Mt. Pisgah":["https://saranaclakeny.gov/mount-pisgah/","mt-pisgah"],
+ "Pats Peak":["https://www.patspeak.com","pats-peak"],
+ "Peek 'n Peak":["https://www.pknpk.com","peek-n-peak"],
+ "Powder Ridge":["https://powderridgepark.com","powder-ridge-0"],
+ "Ragged Mountain":["https://www.raggedmountainresort.com","ragged-mountain"],
+ "Saskadena Six":["https://www.saskadenasix.com","saskadena-six-ski-area"],
+ "Snow Ridge":["https://snowridge.com","snow-ridge"],
+ "Swain Resort":["https://swain.com","swain-resort"],
+ "Tenney Mountain":["https://skitenney.com","tenney-mountain"],
+ "Titus Mountain":["https://www.titusmountain.com","titus-mountain"],
+ "Veterans Memorial":["https://www.skithevets.org","veterans-memorial-recreation-area"],
+ "Waterville Valley":["https://www.waterville.com","waterville-valley-resort"],
+ "West Mountain":["https://westmountain.com","west-mountain"],
+ "Whaleback Mountain":["https://www.whaleback.com","whaleback-mountain"],
+ "Big Moose":["https://skibigmoose.com","big-moose"],
+ "Big Rock Mountain":["https://www.bigrockmaine.com","big-rock-mountain"],
+ "Black Mountain of Maine":["https://skiblackmountain.org","black-mountain-of-maine"],
+ "Camden Snow Bowl":["https://camdensnowbowl.com","camden-snow-bowl"],
+ "Lost Valley":["https://www.lostvalleyski.com","lost-valley"],
+ "Mt. Abram":["https://mtabram.com","mt-abram"],
+ "Saddleback Mountain":["https://www.saddlebackmaine.com","saddleback-mountain"],
+ "Winter4Kids":["https://www.winter4kids.org","winter4kids"],
+ "Bear Creek":["https://www.bcmountainresort.com","bear-creek"],
+ "Blue Knob":["https://blueknob.com","blue-knob-all-season-resort"],
+ "Bryce Resort":["https://bryceresort.com","bryce-resort"],
+ "Canaan Valley":["https://www.canaanresort.com","canaan-valley"],
+ "Cataloochee":["https://cataloochee.com","cataloochee-ski-area"],
+ "Hatley Pointe":["https://hatleypointe.com","hatley-pointe"],
+ "Massanutten Resort":["https://www.massresort.com","massanutten-resort"],
+ "Montage Mountain":["https://www.montagemountainresorts.com","montage-mountain"],
+ "Ober Mountain":["https://www.obergatlinburg.com","ober-mountain"],
+ "Shawnee Mountain":["https://shawneemt.com","shawnee-mountain-ski-area"],
+ "Ski Big Bear":["https://www.ski-bigbear.com","ski-big-bear"],
+ "Ski Sawmill":["https://skisawmill.com","ski-sawmill"],
+ "Spring Mountain":["https://springmountainadventures.com","spring-mountain-adventures"],
+ "Tussey Mountain":["https://tusseymountain.com","tussey-mountain"],
+ "Wintergreen Resort":["https://www.wintergreenresort.com","wintergreen"],
+ "Winterplace":["https://winterplace.com","winterplace-ski-resort"],
+ "Wisp Resort":["https://www.wispresort.com","wisp"],
+ "Apex Mountain Resort":["https://apexresort.com","apex-mountain-resort"],
+ "Baldy Mountain Resort":["https://baldyresort.com","baldy-mountain-resort"],
+ "Big White":["https://www.bigwhite.com","big-white-ski-resort"],
+ "Calabogie Peaks":["https://calabogie.com","calabogie-peaks-resort"],
+ "Camp Fortune":["https://campfortune.com","camp-fortune"],
+ "Castle Mountain Resort":["https://www.skicastle.ca","castle-mountain-resort"],
+ "Centre Vorlage":["https://centrevorlage.ca","centre-vorlage"],
+ "Owl's Head":["https://owlshead.com","destination-owls-head"],
+ "Fairmont Hot Springs":["https://www.fairmonthotsprings.com","fairmont-hot-springs"],
+ "Hockley Valley Resort":["https://hockley.com","hockley-valley-resort"],
+ "Hudson Bay Mountain":["https://www.hudsonbaymountain.com","hudson-bay-mountain"],
+ "Loch Lomond":["https://www.lochlomond.ca","loch-lomond"],
+ "Manning Park":["https://manningpark.com","manning-park"],
+ "Marble Mountain":["https://skimarble.com","marble-mountain"],
+ "Le Massif du Sud":["https://massifdusud.net","massif-du-sud"],
+ "Mont Édouard":["https://www.montedouard.com","mont-edouard"],
+ "Mont Rigaud":["https://montrigaud.com","mont-rigaud"],
+ "Mont Sutton":["https://montsutton.com","mont-sutton"],
+ "Mont-Kanasuta":["https://kanasuta.com","mont-kanasuta"],
+ "Mount Baldy Ski Area":["https://www.skimountbaldy.ca","mount-baldy-ski-area"],
+ "Mt. Washington":["https://www.mountwashington.ca","mt-washington"],
+ "Murray Ridge":["https://www.murrayridge.com","murray-ridge-ski-area"],
+ "Pass Powderkeg":["https://www.passpowderkeg.com","pass-powderkeg"],
+ "Phoenix Mountain":["https://www.skiphoenix.ca","phoenix-mountain"],
+ "Sasquatch Mountain":["https://sasquatchmountain.ca","sasquatch-mountain-resort"],
+ "Shames Mountain":["https://mymountaincoop.ca","shames-mountain"],
+ "Ski Saint-Bruno":["https://skisaintbruno.ca","ski-saint-bruno"],
+ "Ski Vallée Bleue":["https://valleebleue.com","ski-vallee-bleue"],
+ "Smokey Mountain":["http://www.skismokey.ca","smokey-mountain-ski-club"],
+ "Val d'Irène":["https://valdi.ski","val-direne"]
+};
+
+AREAS.forEach(function(a){
+  a.addr = ADDR[a.name] || null;
+  const w = WEB[a.name];
+  a.site = w ? w[0] : null;
+  a.pass = w && w[1] ? IPX + w[1] : null;
+});
 
 const MAXVERT = Math.max.apply(null, AREAS.map(function(a){return a.vert;}));
 const HOME_STATES = ["NY","CT","MA","VT","NH"];
@@ -569,8 +671,14 @@ function render(){
     const dist = a.dist === null ? "—" : Math.round(a.dist) + " <span>mi</span>";
     tr.innerHTML =
       '<td class="rank">' + (i+1) + '</td>' +
-      '<td><div class="name">' + a.name + '</div>' +
-        '<div class="place">' + a.town + ', ' + a.state + '</div>' +
+      '<td><div class="name">' +
+          (a.site ? '<a class="sitelink" href="' + a.site + '" target="_blank" ' +
+                    'rel="noopener noreferrer">' + a.name + '</a>' : a.name) +
+        '</div>' +
+        '<div class="place">' + a.town + ', ' + a.state +
+          (a.pass ? ' &middot; <a class="passlink" href="' + a.pass + '" target="_blank" ' +
+                    'rel="noopener noreferrer">pass info</a>' : '') +
+        '</div>' +
         (a.addr ?
           '<div class="addrline">' +
             '<a class="addr" href="' + mapsUrl(a.addr) + '" target="_blank" rel="noopener noreferrer">' +
