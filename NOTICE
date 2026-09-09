@@ -1,0 +1,41 @@
+Indy Pass Northeast Finder
+Copyright (c) 2026 Terry Nous
+
+This product includes data from the following sources.
+
+-------------------------------------------------------------------------------
+GeoNames — ZIP code coordinates
+-------------------------------------------------------------------------------
+Source:   https://www.geonames.org
+License:  Creative Commons Attribution 4.0 International (CC BY 4.0)
+          https://creativecommons.org/licenses/by/4.0/
+
+Modifications: coordinates were rounded to three decimal places, and all
+fields other than ZIP code, latitude, longitude, city and state were removed.
+The data was obtained by way of the `zipcodes` Python package
+(https://github.com/seanpianka/zipcodes, MIT), which combines GeoNames
+coordinates with the USPS ZIP Locale Detail list (public domain).
+
+-------------------------------------------------------------------------------
+Ski area statistics and addresses
+-------------------------------------------------------------------------------
+Vertical drop, trail counts, lift counts, night skiing and terrain park flags
+were compiled from https://www.indyskipass.com/our-resorts/east. Base-lodge
+street addresses were verified individually against each operator's own
+website. These are factual records, compiled independently.
+
+-------------------------------------------------------------------------------
+Typefaces
+-------------------------------------------------------------------------------
+Archivo, Public Sans and IBM Plex Mono are loaded at runtime from Google Fonts
+and are not redistributed with this project. All three are licensed under the
+SIL Open Font License 1.1. If you self-host them, ship the OFL notice with the
+font files.
+
+-------------------------------------------------------------------------------
+Trademarks
+-------------------------------------------------------------------------------
+"Indy Pass" and the names of all listed ski areas are the trademarks of their
+respective owners, used here descriptively to identify the places being
+described. This project is unofficial and is not affiliated with, endorsed by,
+or sponsored by Indy Pass or any listed resort.
